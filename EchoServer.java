@@ -9,78 +9,74 @@ import java.io.*;
 
 
 public class EchoServer2 {
-public static void main(String args[]){
 
-    ServerSocket serverSocket =null;
-    Socket clientSocket =null;
-    
-    try{
+    public static void main(String args[]) {
 
-        serverSocket = new ServerSocket(3000); 
+        ServerSocket serverSocket = null;
+        Socket clientSocket = null;
 
-    } catch(IOException e){
+        try {
+            serverSocket = new ServerSocket(3000);
+        } 
 
-   	 System.out.println("Error, failed to connect");
-         System.out.println(e.getMessage());
+	catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    }//end of try-catch
+        while (true) {
+            try {
+                clientSocket = serverSocket.accept();
+            } 
+	    
+	    catch (IOException e) {
+                System.out.println("Error, failed to connect");
+            	System.out.println(e.getMessage());
+            }
 
-    while (true){
+            // Server makes new thread for additional clients
+            new NewThread(clientSocket).start();
+        }
+    }
+}
+class NewThread extends Thread {
 
-        try{
-            clientSocket = serverSocket.accept();
-		}catch(Exception e){
+    protected Socket clientSocket;
 
-			System.out.println("Error, failed to connect");
-			System.out.println(e.getMessage());
-
-		}//end of try-catch
-
-		new EchoThread (clientSocket).start();
-
-	}//end of while
-
-    
-    }//end of main
-}//end of class
-
-
-
-public class EchoThread extends Thread {
-
-    protected Socket socket;
-
-    public EchoThread(Socket clientSocket) {
-        this.socket = clientSocket;
+    public NewThread(Socket clientSocket) {
+        this.clientSocket = clientSocket;
     }
 
     public void run() {
-        InputStream inp = null;
-        BufferedReader brinp = null;
+
+        InputStream in = null;
+        BufferedReader bufReaderIn = null;
         DataOutputStream out = null;
+	String inputLine;
+
         try {
-            inp = socket.getInputStream();
-            brinp = new BufferedReader(new InputStreamReader(inp));
-            out = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException e) {
+            in = clientSocket.getInputStream();
+            bufReaderIn = new BufferedReader(new InputStreamReader(in));
+            out = new DataOutputStream(clientSocket.getOutputStream());
+        } 
+
+	catch (IOException e) {
             return;
-        }//end of try catch
-        String line;
+        }
+
         while (true) {
             try {
-                line = brinp.readLine();
-                if ((line == null) || line.equalsIgnoreCase("QUIT")) {
-                    socket.close();
+                inputLine = bufReaderIn.readLine();
+                if ((inputLine == null)) {
+                    clientSocket.close();
                     return;
                 } else {
-                    out.writeBytes(line + "\n\r");
+                    out.writeBytes(inputLine + "\n\r");
                     out.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
-            }//end of try-catch
-        }//end of while
-    }//end of run
-}//end of class
-
+            }
+        }
+    }
+}
