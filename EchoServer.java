@@ -22,7 +22,7 @@ public class EchoServer {
 
 	catch (IOException e) {
             e.printStackTrace();
-        }
+        }//end of try-catch
 
         while (true) {
             try {
@@ -32,13 +32,14 @@ public class EchoServer {
 	    catch (IOException e) {
                 System.out.println("Error, failed to connect");
             	System.out.println(e.getMessage());
-            }
+            }//end of try-catch
 
             // Server makes new threads for additional clients
             new NewThread(clientSocket).start();
-        }
-    }
-}
+        }//end of while
+    }//end of main
+}//end of class
+
 class NewThread extends Thread {
 
     protected Socket clientSocket;
@@ -63,7 +64,7 @@ class NewThread extends Thread {
 
 	catch (IOException e) {
             return;
-        }
+        }//end of try-catch
 
         while (true) {
             try {
@@ -78,7 +79,7 @@ class NewThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
-            }
-        }
-    }
-}
+            }//end of try-catch
+        }//end of while
+    }//end of NewThread
+}//end of class
