@@ -25,26 +25,24 @@ public static void main(String args[]){
 
     }//end of try-catch
 
-    }
     while (true){
 
         try{
-
             clientSocket = serverSocket.accept();
-	} catch(Exception e){
+		}catch(Exception e){
 
-        System.out.println("Error, failed to connect");
-        System.out.println(e.getMessage());
+			System.out.println("Error, failed to connect");
+			System.out.println(e.getMessage());
 
-        }//end of try-catch
+		}//end of try-catch
 
-            new EchoThread (clientSocket).start();
+		new EchoThread (clientSocket).start();
 
-        }//end of while
+	}//end of while
 
     
-    }
-}
+    }//end of main
+}//end of class
 
 
 
@@ -66,7 +64,7 @@ public class EchoThread extends Thread {
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             return;
-        }
+        }//end of try catch
         String line;
         while (true) {
             try {
@@ -81,8 +79,8 @@ public class EchoThread extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
-            }
-        }
-    }
-}
+            }//end of try-catch
+        }//end of while
+    }//end of run
+}//end of class
 
